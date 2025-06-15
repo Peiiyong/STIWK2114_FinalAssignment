@@ -8,13 +8,20 @@ import 'package:wtms/service/config.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Worker worker;
-  const ProfileScreen({super.key, required this.worker, });
+  const ProfileScreen({super.key, required this.worker});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,12 +42,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: Theme.of(context).colorScheme.onPrimary,
         ),
         centerTitle: true,
+        actions: [
+          // refesh button to reload the profile
+          IconButton(
+            icon: Icon(
+              Icons.refresh,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+            onPressed: () {
+              fetchProfile();
+            },
+          ),
+        ],
       ),
-      body: MyProfile(
-        worker: widget.worker,
-        editDetails: (String field) {
-          editDetailsBox(field);
-        },
+      body: ListView(
+        children: [
+          MyProfile(
+            worker: widget.worker,
+            editDetails: (String field) {
+              editDetailsBox(field);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -70,7 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           RegExp(r'^[0-9]+$').hasMatch(phone);
     }
 
-    // Show input dialog for editing
     showDialog(
       context: context,
       builder: (context) {
@@ -109,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         backgroundColor: Colors.red,
                       ),
                     );
-                    return; // Stop further execution if email is invalid
+                    return;
                   }
 
                   // Validate phone if the field is 'Phone'
@@ -123,38 +145,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         backgroundColor: Colors.red,
                       ),
                     );
-                    return; // Stop further execution if phone is invalid
+                    return;
                   }
 
-                  // Call the server to update the worker details (call updateWorkerDetails() method )
-                  bool success = await updateWorkerDetails(
-                    int.parse(widget.worker.id),
-                    field.toLowerCase(),
-                    newValue,
+                  // Show confirmation dialog before updating
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Confirm Update'),
+                      content: Text('Are you sure you want to update $field?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pop(context); // Close confirm dialog
+                            Navigator.pop(context); // Close edit dialog
+
+                            // Call the server to update the worker details
+                            bool success = await updateWorkerDetails(
+                              int.parse(widget.worker.id),
+                              field.toLowerCase(),
+                              newValue,
+                            );
+
+                            if (success) {
+                              setState(() {
+                                if (field == 'Email') {
+                                  widget.worker.email = newValue;
+                                } else if (field == 'Phone') {
+                                  widget.worker.phone = newValue;
+                                } else if (field == 'Address') {
+                                  widget.worker.address = newValue;
+                                }
+                              });
+
+                              // Update worker details in SharedPreferences
+                              SharedPreferences.getInstance().then((prefs) {
+                                Worker updatedWorker = widget.worker;
+                                prefs.setString(
+                                  'worker',
+                                  json.encode(updatedWorker.toJson()),
+                                );
+                              });
+                            }
+                          },
+                          child: const Text('Yes, Update'),
+                        ),
+                      ],
+                    ),
                   );
-
-                  if (success) {
-                    // Update the UI only if the server update is successful
-                    setState(() {
-                      if (field == 'Email') {
-                        widget.worker.email = newValue;
-                      } else if (field == 'Phone') {
-                        widget.worker.phone = newValue;
-                      } else if (field == 'Address') {
-                        widget.worker.address = newValue;
-                      }
-                    });
-
-                    // Update worker details in SharedPreferences
-                    SharedPreferences.getInstance().then((prefs) {
-                      Worker updatedWorker = widget.worker;
-                      prefs.setString(
-                        'worker',
-                        json.encode(updatedWorker.toJson()),
-                      );
-                    });
-                    Navigator.pop(context); // Close the dialog
-                  }
                 }
               },
               child: Text('Save'),
@@ -171,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String field,
     String newValue,
   ) async {
-    final url = Uri.parse('${Config.server}/update_worker.php');
+    final url = Uri.parse('${Config.server}/update_profile.php');
 
     // Log the request data
     print('Sending request to $url');
@@ -234,6 +276,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
       return false; // Update failed
+    }
+  }
+
+  Future<void> fetchProfile() async {
+    var response = await http.post(
+      Uri.parse('${Config.server}/get_profile.php'),
+      body: {"worker_id": widget.worker.id.toString()},
+    );
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      // Assuming the response contains the worker profile as a JSON object
+      setState(() {
+        widget.worker.email = data['email'];
+        widget.worker.phone = data['phone'];
+        widget.worker.address = data['address'];
+        // Add other fields as needed
+      });
+      print("Profile updated from server.");
+    } else {
+      print("Error fetching profile: ${response.statusCode}");
     }
   }
 }

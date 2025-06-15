@@ -4,5 +4,5 @@
 */
 class Config {
   // This is used to access the database 
-  static const String server = 'http://10.143.138.141//wtms';
+  static const String server = 'http://192.168.181.50/wtms';
 }

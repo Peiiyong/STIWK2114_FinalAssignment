@@ -5,8 +5,11 @@ import 'package:wtms/components/my_drawer_tile.dart';
 import 'package:wtms/models/worker.dart';
 import 'package:wtms/theme/light_mode.dart';
 import 'package:wtms/theme/theme_provider.dart';
+import 'package:wtms/view/history_screen.dart';
 import 'package:wtms/view/login_screen.dart';
+import 'package:wtms/view/profile_screen.dart';
 import 'package:wtms/view/settings_screen.dart';
+import 'package:wtms/view/task_list_screen.dart';
 
 
 /*
@@ -49,6 +52,50 @@ class MyDrawer extends StatelessWidget {
             icon: Icons.home,
             onTap: () => Navigator.pop(context),
           ),
+          // task list tile
+          MyDrawerTile(
+            text: 'T A S K S',
+            icon: Icons.task,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context, 
+                MaterialPageRoute(
+                  builder: (context) => TaskListScreen(worker: worker),
+                ),
+              );
+            },
+          ),
+
+          // History list tile
+          MyDrawerTile(
+            text: 'H I S T O R Y',
+            icon: Icons.history,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HistoryScreen(worker: worker),
+                ),
+              ); 
+            },
+          ),
+
+          // profile list tile
+          MyDrawerTile(
+            text: 'P R O F I L E',
+            icon: Icons.person,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(worker: worker),
+                ),
+              );
+            },
+          ),
+          
           // settings list tile
           MyDrawerTile(
             text: 'S E T T I N G S',

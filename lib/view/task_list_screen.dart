@@ -91,184 +91,195 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: ListView.builder(
-          itemCount: filteredTaskList.length,
-          itemBuilder: (context, index) {
-            final task = filteredTaskList[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              elevation: 4,
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              color: Theme.of(context).colorScheme.tertiary,
-              child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        child: filteredTaskList.isEmpty
+            ? Center(
+                child: Text(
+                  'No tasks found.',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontFamily: 'Serif',
+                  ),
+                ),
+              )
+            : ListView.builder(
+                itemCount: filteredTaskList.length,
+                itemBuilder: (context, index) {
+                  final task = filteredTaskList[index];
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    color: Theme.of(context).colorScheme.tertiary,
+                    child: Stack(
                       children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.task,
-                              size: 48,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  task.title ?? '',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    fontFamily: 'Serif',
-                                    letterSpacing: 1.5,
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.task,
+                                    size: 48,
+                                    color: Theme.of(context).colorScheme.onPrimary,
                                   ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  'Task ID: ${task.id ?? '-'}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    fontFamily: 'Serif',
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        task.title ?? '',                                        
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              Theme.of(context).colorScheme.onPrimary,
+                                          fontFamily: 'Serif',
+                                          letterSpacing: 1.5,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        'Task ID: ${task.id ?? '-'}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color:
+                                              Theme.of(context).colorScheme.primary,
+                                          fontFamily: 'Serif',
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.upload,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => SubmitCompletionScreen(
-                                            task: task,
-                                          ),
+                                  Spacer(),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      shape: BoxShape.circle,
                                     ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          task.description ?? '',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimary.withOpacity(0.85),
-                            fontFamily: 'Serif',
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_today,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Assigned: ${task.dateAssigned ?? '-'}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).colorScheme.primary,
-                                fontFamily: 'Serif',
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Icon(
-                              Icons.event,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Due: ${task.dueDate ?? '-'}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).colorScheme.primary,
-                                fontFamily: 'Serif',
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.info,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 6),
-                            Row(
-                              children: [
-                                Text(
-                                  'Status: ',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    fontFamily: 'Serif',
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.upload,
+                                        color:
+                                            Theme.of(context).colorScheme.onPrimary,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => SubmitCompletionScreen(
+                                                  task: task,
+                                                ),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                task.description ?? '',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary.withOpacity(0.85),
+                                  fontFamily: 'Serif',
                                 ),
-                                Icon(
-                                  _getStatusIcon(task.status),
-                                  color: _getStatusColor(task.status),
-                                ),
-                                Container(
-                                  child: Text(
-                                    ' ${task.status?.toUpperCase() ?? '-'}',
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.calendar_today,
+                                    size: 18,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Assigned: ${task.dateAssigned ?? '-'}',
                                     style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: _getStatusColor(task.status),
+                                      fontSize: 14,
+                                      color: Theme.of(context).colorScheme.primary,
                                       fontFamily: 'Serif',
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        MyButton3(
-                          text: 'View',
-                          onTap: () => _showSubmission(task),
-                          icon: Icon(Icons.visibility),
+                                  const SizedBox(width: 16),
+                                  Icon(
+                                    Icons.event,
+                                    size: 18,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Due: ${task.dueDate ?? '-'}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontFamily: 'Serif',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.info,
+                                    size: 18,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Status: ',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              Theme.of(context).colorScheme.primary,
+                                          fontFamily: 'Serif',
+                                        ),
+                                      ),
+                                      Icon(
+                                        _getStatusIcon(task.status),
+                                        color: _getStatusColor(task.status),
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          ' ${task.status?.toUpperCase() ?? '-'}',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: _getStatusColor(task.status),
+                                            fontFamily: 'Serif',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              MyButton3(
+                                text: 'View',
+                                onTap: () => _showSubmission(task),
+                                icon: Icon(Icons.visibility),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }

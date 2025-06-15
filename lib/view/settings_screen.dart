@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:wtms/components/my_settings_tile.dart';
 import 'package:wtms/models/worker.dart';
 import 'package:wtms/theme/theme_provider.dart';
-import 'package:wtms/view/profile_screen.dart';
 import 'package:wtms/view/resetpass_screen.dart';
 
 
@@ -37,21 +36,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
-          // Profile tile
-          MySettingsTile(
-            icon: Icon(Icons.person),
-            title: 'Profile',
-            onTap: () {
-              // Navigate to profile screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(worker: widget.worker,),
-                ),
-              );
-            },
-          ),
-
           // Dark Mode toggle tile
           MySettingsTile(
             icon: Icon(Icons.dark_mode),

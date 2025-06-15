@@ -306,7 +306,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Future<void> _showSubmission(Task task) async {
     try {
       var response = await http.post(
-        Uri.parse('${Config.server}/get_submission.php'),
+        Uri.parse('${Config.server}/get_allsubmit.php'),
         body: {"work_id": task.id.toString()},
       );
       //print('Body: ${response.body}');

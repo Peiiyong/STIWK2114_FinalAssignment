@@ -6,7 +6,6 @@ import 'package:wtms/models/task.dart';
 import 'package:wtms/models/worker.dart';
 import 'package:wtms/service/config.dart';
 import 'package:wtms/view/taskDash.dart';
-import 'package:wtms/view/task_list_screen.dart';
 import 'package:wtms/view/historyDash.dart';
 import 'package:wtms/view/profileDash.dart';
 
@@ -29,39 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchTasks();
     _pages = [
       TaskDash(worker: widget.worker),
       Historydash(worker: widget.worker),
       Profiledash(worker: widget.worker),
     ];
   }
-
-  Future<void> fetchTasks() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      var response = await http.post(
-        Uri.parse('${Config.server}/get_works.php'),
-        body: {"worker_id": widget.worker.id.toString()},
-      );
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        taskList.clear();
-        for (var item in data) {
-          Task t = Task.fromJson(item);
-          taskList.add(t);
-        }
-      }
-    } catch (e) {
-      print('Error fetching tasks: $e');
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

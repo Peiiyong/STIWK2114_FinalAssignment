@@ -22,7 +22,7 @@
   </tr>  
   <tr>
     <td><strong>Submission Date</strong></td>
-    <td>30/5/2025</td>
+    <td>20/6/2025</td>
   </tr>  
 </table>
 

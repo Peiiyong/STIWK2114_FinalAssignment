@@ -139,7 +139,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                           color:
                                               Theme.of(context).colorScheme.onPrimary,
                                           fontFamily: 'Serif',
-                                          letterSpacing: 1.5,
+                                          //letterSpacing: 1.5,
                                         ),
                                       ),
                                       const SizedBox(height: 2),

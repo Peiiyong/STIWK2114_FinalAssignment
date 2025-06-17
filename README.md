@@ -26,6 +26,18 @@
   </tr>  
 </table>
 
+## 📑 Table of Contents
+- [1.0 App Description](#10-app-description)
+- [2.0 Implementation](#20-implementation)
+  - [2.1 Flutter Front-End](#21-flutter-front-end)
+  - [2.2 Flutter Back-End](#22-flutter-back-end)
+  - [2.3 Database](#23-database)
+- [3.0 Screenshots](#30-screenshots)
+- [4.0 Reflection / Challenges](#40-reflection--challenges)
+- [5.0 How to Run the App](#50-how-to-run-the-app)
+---
+
+
 ## 1.0 App Description
 
 <div align="justify">

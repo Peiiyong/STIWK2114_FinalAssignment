@@ -315,30 +315,46 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
             ElevatedButton(
               onPressed: () {
+                final newText = _controller.text.trim();
+                final oldText = submission.submissionText?.trim() ?? '';
+                if (newText == oldText) {
+                  // no changes
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('No Changes Detected'),
+                      content: const Text('Please edit your submission before saving.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                  return;
+                }
                 // Show confirmation dialog before saving
                 showDialog(
                   context: context,
-                  builder:
-                      (context) => AlertDialog(
-                        title: const Text('Confirm Update'),
-                        content: const Text(
-                          'Are you sure you want to overwrite your submission?',
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context); // Close confirmation
-                              Navigator.pop(context); // Close edit dialog
-                              editSubmission(submission.id!, _controller.text);
-                            },
-                            child: const Text('Confirm'),
-                          ),
-                        ],
+                  builder: (context) => AlertDialog(
+                    title: const Text('Confirm Update'),
+                    content: const Text('Are you sure you want to overwrite your submission?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
                       ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context); // Close confirm dialog
+                          Navigator.pop(context); // Close edit dialog
+                          editSubmission(submission.id!, newText);
+                        },
+                        child: const Text('Confirm'),
+                      ),
+                    ],
+                  ),
                 );
               },
               child: const Text('Save'),

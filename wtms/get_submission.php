@@ -8,12 +8,12 @@ if (!isset($_POST['worker_id'])) {
 
 $worker_id = $_POST['worker_id'];
 
-// Join submissions 和 works，查出任务标题
+// Join submissions and works tables to get all submissions for the worke
 $sql = "SELECT s.*, w.title as task_title 
         FROM tbl_submissions s 
         JOIN tbl_works w ON s.work_id = w.id 
         WHERE s.worker_id = ? 
-        ORDER BY s.submitted_at ASC";
+        ORDER BY s.submitted_at DESC";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $worker_id);
 $stmt->execute();
